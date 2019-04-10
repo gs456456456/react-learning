@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<script src="https://unpkg.com/react@16/umd/react.development.js"></script>
+	<script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+	<!-- 生产环境中不建议使用 -->
+	<script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+</head>
+<body>
+	<div id="example">
+	</div>
+	<div id="example2">
+	</div>
+	<div id="component"></div>
+</body>
+<script type="text/babel">
+	console.log(ReactDOM)
+	//basic
+	ReactDOM.render(
+		<p>Hello</p>,
+		document.getElementById('example')
+	)
+
+
+	//render
+	function Clock(props){
+		return (
+			<div>
+				<p>now is {props.date.getTime()}</p>
+			</div>
+		)
+	}
+	ReactDOM.render(
+		<Clock date={new Date()} />,
+		document.getElementById('example')
+	)
+
+
+	//jsx ps:表达式用单括号
+	const root = document.getElementById('example2')
+	const testVal = 100
+	const testArr = [1,2]
+	const test = <div data-testattr={ testVal } style={{background: 'red',width: '100px',height: '100px'}}>
+		{/* 注释用单括号 */}
+		<p> {testArr} </p>
+	</div>
+	ReactDOM.render(
+		test,
+		root
+	)
+
+	//组件状态 && 生命周期 ps:组件首字母大写
+	const component = document.getElementById('component')
+	class Clock2 extends React.Component {
+		constructor(props) {
+			super(props);
+			this.state = { date:new Date()}
+		}
+		//组件初始化时只调用，以后组件更新不调用，整个生命周期只调用一次，此时可以修改state。
+		componentWillMount (){
+			console.log('init component')
+		}
+
+		render () {	
+			return (
+				<div>
+					now is { this.state.date.getTime() }
+				</div>
+			)
+		}
+
+		//组件渲染之后调用，只调用一次。
+		componentDidMount (){
+			console.log('mounted')
+		}
+
+		//组件初始化时不调用，组件接受新的props时调用。
+		componentWillReceiveProps(nextProps){
+
+		}
+
+		/* 
+           react性能优化非常重要的一环。组件接受新的state或者props时调用，我们可以设置在此对比前后两个props和state是否相同，如果相同则返回false阻止更新，因为相同的属性状态一定会生成相同的dom树，这样就不需要创造新的dom树和旧的dom树进行diff算法对比，节省大量性能，尤其是在dom结构复杂的时候
+
+		   ps:vue视图层不会重新渲染,不用考虑,真方便 -_-!!
+		*/
+		shouldComponentUpdate(){
+
+		}
+
+		//组件初始化时不调用，只有在组件将要更新时才调用，此时可以修改state
+		componentWillUpdate(nextProps, nextState){
+
+		}
+
+		//组件初始化时不调用，组件更新完成后调用，此时可以获取dom节点。
+		componentDidUpdate(){
+
+		}
+
+		//组件将要卸载时调用，一些事件监听和定时器需要在此时清除。
+		componentWillUnmount(){
+
+		}
+	}
+	ReactDOM.render(
+		<Clock2 />,
+		component
+	)
+
+
+
+</script>
+</html>
